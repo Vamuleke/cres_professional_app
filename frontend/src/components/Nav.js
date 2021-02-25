@@ -1,7 +1,18 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-
-const Nav = () => {
+import {useDispatch, useSelector} from 'react-redux'
+import { signout } from '../actions/userActions';
+const Nav = (props) => {
+	
+	const userSignin=useSelector(state=>state.userSignin);
+	const {userInfo} = userSignin
+	if( !userInfo ){
+		window.location.href="/"
+	}
+	const dispatch=useDispatch()
+	const signoutHandler=()=>{
+		dispatch(signout())
+	}
     return (
         <nav className="navbar navbar-default navbar-fixed-top">
 			<div className="brand">
@@ -43,11 +54,15 @@ const Nav = () => {
 							</ul>
 						</li>
 						<li className="dropdown">
-							<a href="#" className="dropdown-toggle" data-toggle="dropdown"><img src={process.env.PUBLIC_URL + "/assets/images/user.png"} className="img-circle" alt="Avatar"/> <span>Donatien</span> <i className="icon-submenu lnr lnr-chevron-down"></i></a>
+							<a href="#" className="dropdown-toggle" data-toggle="dropdown"><img src={userInfo.photo} className="img-circle" alt="Avatar"/> <span>{userInfo.name}</span> <i className="icon-submenu lnr lnr-chevron-down"></i></a>
 							<ul className="dropdown-menu">
-								<li><a href="#"><i className="lnr lnr-user"></i> <span>Mon Profil</span></a></li>
+								<li>
+									<Link to="/admin/profile">
+										<i className="lnr lnr-user"></i> <span>Mon Profil</span>
+									</Link>
+								</li>
 								<li><a href="#"><i className="lnr lnr-cog"></i> <span>Paramètres</span></a></li>
-								<li><a href="#"><i className="lnr lnr-exit"></i> <span>Déconnexion</span></a></li>
+								<li><Link to="/#signout" onClick={signoutHandler}><i className="lnr lnr-exit"></i> <span>Déconnexion</span></Link></li>
 							</ul>
 						</li>
 					</ul>
